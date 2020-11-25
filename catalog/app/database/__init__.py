@@ -13,6 +13,8 @@ def get_db():
         db = g._database = sqlite3.connect(DATABASE)
     return db
 
+#whatever your fn outputs this fn will format the results
+#you don't have to specify the data type
 def output_formatter(results: tuple):
     out = {"body": []}
     for result in results:
@@ -29,19 +31,22 @@ def scan():
     cursor = get_db().execute("SELECT * FROM product", ())
     results = cursor.fetchall()
     cursor.close()
-    return output_formatter(results)
+    return output_formatter(results) #formatted results
 
+#sqlite3 '?' = helps prevent a sql injection attack from binding. 
 def read(prod_id):
     query = """
         SELECT * 
         FROM product
-        WHERE id = ?
+        WHERE id = ? 
         """
     cursor = get_db().execute(query, (prod_id,))
     results = cursor.fetchall()
     cursor.close()
     return output_formatter(results)
 
+#create a string for ea. key/value pairs
+#  \" - this is an escape expression to make sure the quote is added in string. 
 def update(prod_id, fields: dict):
     field_string = ", ".join(
             "%s=\"%s\"" % (key, val)
@@ -72,8 +77,10 @@ def create(name, price, category, description):
     cursor = get_db()
     last_row_id = cursor.execute(query, value_tuple).lastrowid
     cursor.commit()
-    return last_row_id
+    return last_row_id #return the automatically generated 'id'
 
+#not recommended because most companies want to keep all code. 
+#typically deactivation of columns happens. 
 def delete(prod_id):
     query = "DELETE FROM product WHERE id=%s" % prod_id
     cursor = get_db()

@@ -1,4 +1,4 @@
-#!/user/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf8 -*-
 """ Simple python requests tests for visual confirmation. These aren't unit tests. 
 """
