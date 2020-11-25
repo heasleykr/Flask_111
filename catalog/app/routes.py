@@ -2,10 +2,13 @@
 # -*- coding: utf8 -*-
 """ HTTP route definitions """
 
-from flask import request #allows interations with any requests. 
+from flask import request, render_template #allows interations with any requests. #renders our templates!
 from app import app
 from app.database import create, read, update, delete, scan
 from datetime import datetime
+from app.forms.product import ProductForm
+
+
 
 @app.route("/")
 def index():
@@ -16,12 +19,27 @@ def index():
         "server_time": serv_time
     }
 
+@app.route("/product_form", methods=["GET", "POST"])
+def product_form():
+    if request.method == "POST":
+        p_Name = request.form.get("name")
+        p_Price = request.form.get("price")
+        p_Category = request.form.get("category")
+        p_Description = request.form.get("description")
+
+        create(p_Name, p_Price, p_Category, p_Description)
+        
+    form = ProductForm()
+
+    return render_template("form_example.html", form=form)
+
 @app.route("/products")
 def get_all_products():
     out = scan() 
     out["ok"] = True
     out["message"] = "Success"
-    return out
+    # return out
+    return render_template("products.html", products=out["body"])
 
 @app.route("/products/<pid>")#pid is product id when we have them
 def get_one_product(pid):
@@ -57,7 +75,9 @@ app.add_url_rule("/katelynn", "index", index)
 @app.route('/user/<name>')
 #param is the user content to be added to the string output view. '%' dynamic content 
 def user(name):
-    return "<h1>Hello, %s!</h1>" % name
+    last_name="Heasley"
+    hobbies="Hiking"
+    return render_template("about_me.html", first_name=name, last_name=last_name, hobbies=hobbies)
 
 #this user input is cast directly into an int automatically <int:number>
 #'number**2' - this is a python shortcut for squaring a number
@@ -70,3 +90,8 @@ def square(number):
 def agent():
     user_agent = request.headers.get("User-Agent")
     return "<p>Your user agent is %s</p>" % user_agent
+
+#our error 404 html page
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template("404.html"), 404

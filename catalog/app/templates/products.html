@@ -1,0 +1,14 @@
+<!-- Our dynamic Jinga2 AboutMe.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <!-- Jinja for loop -->
+        {% for product in products %} 
+                <h1>Name : {{ product["name"] }} </h1>
+                <p>Price: {{ product["price"] }}</p>
+                <p>Category: {{ product["category"] }}</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

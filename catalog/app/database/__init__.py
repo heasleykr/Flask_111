@@ -23,6 +23,8 @@ def output_formatter(results: tuple):
         res_dict["name"] = result[1]
         res_dict["price"] = result[2]
         res_dict["category"] = result[3]
+        res_dict["description"] = result[4]
+        res_dict["active"] = result[5]
         out["body"].append(res_dict)
 
     return out
