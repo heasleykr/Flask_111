@@ -60,8 +60,7 @@ def aboutme():
 
 @app.route("/users")
 def dump_json():
-    out = {"ok": True, "body": ""} #create dictionary ASK WHY WE NEED THIS LINE
-    
+    out = {"ok": True, "body": ""} 
     users = return_users() #grab DB results, which are formatted in tuples
 
     body_list = [] #create list to hold JSON formatted DB results
